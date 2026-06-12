@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Genios Bridge">
+<title>Genios Bridge</title>
+<style>
+:root {
+  --red:#c0392b; --red-soft:#fdf1f0; --red-mid:#e8c5c2;
+  --ink:#1a1a1a; --ink-2:#444; --ink-3:#888; --ink-4:#bbb;
+  --surface:#fff; --surface-2:#f7f7f5; --surface-3:#efefed;
+  --border:rgba(0,0,0,0.08); --border-s:rgba(0,0,0,0.14);
+  --blue:#1a5fa8; --blue-soft:#e8f0fb;
+  --green:#1e7a3a; --green-soft:#e8f5ec;
+  --r:14px; --r-sm:10px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --red:#e05c4e;--red-soft:#2a1a18;--red-mid:#5a2e28;
+    --ink:#f0efed;--ink-2:#c8c6c2;--ink-3:#777;--ink-4:#555;
+    --surface:#1c1c1e;--surface-2:#2c2c2e;--surface-3:#3a3a3c;
+    --border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);
+    --blue:#6fa8e0;--blue-soft:#1a2a40;
+    --green:#6ab87e;--green-soft:#1a2e20;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
+  background:var(--surface-2);color:var(--ink);
+  min-height:100dvh;
+  padding-top:var(--safe-top);
+  padding-bottom:calc(var(--safe-bottom) + 2.5rem);
+}
+
+/* topbar */
+.topbar{
+  background:var(--surface);border-bottom:0.5px solid var(--border);
+  padding:13px 16px 11px;display:flex;align-items:center;gap:10px;
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.tlogo{width:32px;height:32px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tlogo svg{width:17px;height:17px;fill:#fff}
+.ttitle{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.tsub{font-size:11px;color:var(--ink-3);margin-top:1px}
+
+/* layout */
+.main{padding:16px 14px;display:flex;flex-direction:column;gap:14px}
+
+/* card */
+.card{background:var(--surface);border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden}
+.card-head{padding:11px 15px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.cicon{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cicon.red{background:var(--red-soft);color:var(--red)}
+.cicon.blue{background:var(--blue-soft);color:var(--blue)}
+.clabel{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.card-body{padding:14px 15px;display:flex;flex-direction:column;gap:12px}
+
+/* input */
+.flabel{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+input[type=text]{
+  width:100%;background:var(--surface-2);border:0.5px solid var(--border-s);
+  border-radius:var(--r-sm);padding:12px 14px;font-size:16px;
+  color:var(--ink);font-family:inherit;-webkit-appearance:none;outline:none;
+  transition:border-color .15s;
+}
+input[type=text]:focus{border-color:var(--red)}
+input[type=text]::placeholder{color:var(--ink-4)}
+
+/* chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  padding:7px 13px;border-radius:20px;font-size:13px;font-weight:500;
+  border:0.5px solid var(--border-s);background:var(--surface-2);
+  color:var(--ink-2);cursor:pointer;transition:all .12s;user-select:none;
+}
+.chip.active{background:var(--red-soft);border-color:var(--red-mid);color:var(--red);font-weight:600}
+.chip:active{opacity:.65}
+
+/* buttons */
+.btn-row{display:flex;gap:8px}
+.btn{
+  flex:1;padding:13px 10px;border-radius:var(--r-sm);
+  font-size:15px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  border:0.5px solid var(--border-s);font-family:inherit;
+  -webkit-appearance:none;transition:opacity .15s,transform .1s;
+}
+.btn:active{opacity:.7;transform:scale(.98)}
+.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}
+.btn.ghost{background:var(--surface-2);color:var(--ink-2)}
+.btn svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
+.btn.primary svg{fill:rgba(255,255,255,.9)}
+
+/* recents */
+.recents{display:flex;flex-wrap:wrap;gap:7px}
+.rchip{
+  padding:7px 12px;border-radius:20px;font-size:13px;
+  background:var(--surface-2);border:0.5px solid var(--border-s);
+  color:var(--ink-2);cursor:pointer;display:flex;align-items:center;gap:6px;
+}
+.rchip:active{opacity:.65}
+.rchip .x{font-size:16px;color:var(--ink-4);line-height:1;padding-left:2px}
+.no-recents{font-size:13px;color:var(--ink-4);font-style:italic}
+
+/* toast */
+.toast{
+  position:fixed;bottom:calc(var(--safe-bottom) + 72px);left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:var(--surface);
+  padding:9px 20px;border-radius:20px;font-size:13px;font-weight:500;
+  opacity:0;transition:opacity .2s,transform .2s;
+  pointer-events:none;z-index:100;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.footer{text-align:center;font-size:11px;color:var(--ink-4);padding:2px 14px 0}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tlogo">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+  </div>
+  <div>
+    <div class="ttitle">Genios Bridge</div>
+    <div class="tsub">Stichwortsuche · Genios eBib (VÖBB)</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Stichwortsuche -->
+  <div class="card">
+    <div class="card-head">
+      <div class="cicon red">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </div>
+      <span class="clabel">Stichwortsuche</span>
+    </div>
+    <div class="card-body">
+
+      <div>
+        <div class="flabel">Suchbegriff</div>
+        <input type="text" id="kw-input"
+          placeholder="z.B. Heike Kleen"
+          autocorrect="off" spellcheck="false"
+          onkeydown="if(event.key==='Enter') searchKeyword()">
+      </div>
+
+      <div>
+        <div class="flabel">Medium</div>
+        <div class="chip-row">
+          <div class="chip active" data-q="Spiegel">Der Spiegel</div>
+          <div class="chip" data-q="Spiegel Online">Spiegel Online</div>
+          <div class="chip" data-q="manager magazin">manager magazin</div>
+          <div class="chip" data-q="">Alle Medien</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" onclick="searchKeyword()">
+          <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          In Genios suchen
+        </button>
+        <button class="btn ghost" onclick="clearForm()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          Löschen
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Zuletzt gesucht -->
+  <div class="card">
+    <div class="card-head">
+      <div class="cicon blue">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+      </div>
+      <span class="clabel">Zuletzt gesucht</span>
+    </div>
+    <div class="card-body" style="padding-top:12px;padding-bottom:14px">
+      <div class="recents" id="recents-list">
+        <span class="no-recents">Noch keine Suchanfragen</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Genios Bridge · Erfordert VÖBB-Bibliotheksausweis</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GENIOS = 'https://bib-voebb.genios.de/searchResult/Alle';
+let selectedMedium = 'Spiegel';
+
+/* chips */
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    selectedMedium = c.dataset.q;
+  });
+});
+
+/* search */
+function searchKeyword() {
+  const kw = document.getElementById('kw-input').value.trim();
+  if (!kw) { showToast('Bitte Suchbegriff eingeben'); return; }
+  const parts = [kw];
+  if (selectedMedium) parts.push(selectedMedium);
+  const q = parts.join(' ');
+  saveRecent(kw, selectedMedium);
+  const url = `${GENIOS}?requestText=${encodeURIComponent(q)}&view=list&order=desc&sort=BY_DATE&size=10`;
+  window.open(url, '_blank');
+}
+
+function clearForm() {
+  document.getElementById('kw-input').value = '';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.chip[data-q="Spiegel"]').classList.add('active');
+  selectedMedium = 'Spiegel';
+}
+
+/* recents */
+function saveRecent(term, medium) {
+  let list = JSON.parse(localStorage.getItem('genios_recents') || '[]');
+  list = list.filter(x => !(x.term === term && x.medium === medium));
+  list.unshift({ term, medium });
+  if (list.length > 10) list = list.slice(0, 10);
+  localStorage.setItem('genios_recents', JSON.stringify(list));
+  renderRecents();
+}
+
+function renderRecents() {
+  const list = JSON.parse(localStorage.getItem('genios_recents') || '[]');
+  const el = document.getElementById('recents-list');
+  if (!list.length) {
+    el.innerHTML = '<span class="no-recents">Noch keine Suchanfragen</span>';
+    return;
+  }
+  el.innerHTML = list.map((x, i) => `
+    <div class="rchip" onclick="loadRecent(${i})">
+      <span>${x.term}${x.medium ? ' · ' + x.medium : ''}</span>
+      <span class="x" onclick="removeRecent(event,${i})">×</span>
+    </div>`).join('');
+}
+
+function loadRecent(i) {
+  const list = JSON.parse(localStorage.getItem('genios_recents') || '[]');
+  const x = list[i]; if (!x) return;
+  document.getElementById('kw-input').value = x.term;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.remove('active');
+    if (c.dataset.q === x.medium) c.classList.add('active');
+  });
+  if (!x.medium) document.querySelector('.chip[data-q=""]').classList.add('active');
+  selectedMedium = x.medium || '';
+  searchKeyword();
+}
+
+function removeRecent(e, i) {
+  e.stopPropagation();
+  let list = JSON.parse(localStorage.getItem('genios_recents') || '[]');
+  list.splice(i, 1);
+  localStorage.setItem('genios_recents', JSON.stringify(list));
+  renderRecents();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+renderRecents();
+</script>
+</body>
+</html>
